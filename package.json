@@ -4,7 +4,8 @@
   "description": "",
   "scripts": {
     "start": "node app.js",
-    "test": "echo \"No tests yet...\""
+    "test": "echo \"No tests yet...\"",
+    "build": "echo 'Rien à build'"
   },
   "dependencies": {
     "@azure/functions": "^4.6.0",
