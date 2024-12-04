@@ -1,0 +1,20 @@
+{
+  "name": "nfi-mondial-net",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "start": "node app.js",
+    "test": "echo \"No tests yet...\""
+  },
+  "dependencies": {
+    "@azure/functions": "^4.6.0",
+    "bcrypt": "^5.1.1",
+    "body-parser": "^1.20.3",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.1",
+    "multer": "^1.4.5-lts.1",
+    "sequelize": "^6.37.5",
+    "tedious": "^18.6.1"
+  },
+  "main": "src/{index.js,functions/*.js}"
+}
