@@ -5,15 +5,12 @@ exports.createContenuWithMedia = async (req, res) => {
   const { user_id, title, body, is_public } = req.body;
 
   try {
-    // Vérifie si un fichier a été uploadé
-    if (!req.file) {
+    if (!req.fileUrl) {
       return res.status(400).json({ message: "Aucun fichier téléchargé" });
     }
 
-    // Détermine le type de média
     const fileType = req.file.mimetype.startsWith("image") ? "image" : "video";
 
-    // Crée le contenu
     const contenu = await Contenu.create({
       user_id,
       title,
@@ -21,11 +18,10 @@ exports.createContenuWithMedia = async (req, res) => {
       is_public,
     });
 
-    // Crée le média associé
     const media = await Media.create({
-      file_path: req.file.path,
+      file_path: req.fileUrl, // URL du fichier sur Azure
       type: fileType,
-      contenu_id: contenu.id, // Lien avec le contenu
+      contenu_id: contenu.id,
     });
 
     res.status(201).json({
