@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: API Documentation
-  description: Documentation de l'API pour gérer les utilisateurs, contenus, médias, commentaires et notifications.
+  description: API pour gérer les utilisateurs, contenus, médias, commentaires et notifications.
   version: "1.0.0"
 
 servers:
@@ -12,7 +12,6 @@ paths:
   /utilisateurs:
     post:
       summary: Créer un utilisateur
-      description: Permet de créer un nouvel utilisateur.
       requestBody:
         required: true
         content:
@@ -22,30 +21,15 @@ paths:
               properties:
                 nom:
                   type: string
-                  example: John
                 email:
                   type: string
-                  example: john@example.com
                 motDePasse:
                   type: string
-                  example: "password123"
       responses:
         "201":
-          description: Utilisateur créé avec succès
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: "Utilisateur créé avec succès."
-        "400":
-          description: Erreur de validation des données
-
+          description: Utilisateur créé
     get:
       summary: Récupérer tous les utilisateurs
-      description: Retourne une liste de tous les utilisateurs.
       responses:
         "200":
           description: Liste des utilisateurs
@@ -58,72 +42,12 @@ paths:
                   properties:
                     id:
                       type: integer
-                      example: 1
                     nom:
                       type: string
-                      example: John
-
-  /utilisateurs/{id}:
-    get:
-      summary: Récupérer un utilisateur par ID
-      description: Retourne les détails d'un utilisateur en fonction de son ID.
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-            example: 1
-      responses:
-        "200":
-          description: Utilisateur trouvé
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  id:
-                    type: integer
-                    example: 1
-                  nom:
-                    type: string
-                    example: John
-        "404":
-          description: Utilisateur non trouvé
-
-  /utilisateurs/login:
-    post:
-      summary: Connexion utilisateur
-      description: Permet à un utilisateur de se connecter.
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                email:
-                  type: string
-                  example: john@example.com
-                motDePasse:
-                  type: string
-                  example: "password123"
-      responses:
-        "200":
-          description: Connexion réussie
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  token:
-                    type: string
-                    example: "eyJhbGciOiJIUzI1NiIsInR..."
 
   /contenus/create:
     post:
       summary: Créer un contenu avec un média
-      description: Permet de créer un contenu en téléchargeant un fichier média vers Azure Blob Storage.
       requestBody:
         required: true
         content:
@@ -134,29 +58,15 @@ paths:
                 media:
                   type: string
                   format: binary
-                  description: Fichier média à télécharger
                 titre:
                   type: string
-                  example: "Titre du contenu"
       responses:
         "201":
-          description: Contenu créé avec succès
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: "Contenu créé avec succès."
-                  mediaUrl:
-                    type: string
-                    example: "https://nifnet.blob.core.windows.net/media/example.jpg"
+          description: Contenu créé
 
   /commentaires:
     post:
       summary: Ajouter un commentaire
-      description: Permet d'ajouter un commentaire à un contenu.
       requestBody:
         required: true
         content:
@@ -166,69 +76,34 @@ paths:
               properties:
                 contenuId:
                   type: integer
-                  example: 1
                 texte:
                   type: string
-                  example: "Ceci est un commentaire."
       responses:
         "201":
-          description: Commentaire ajouté avec succès
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: "Commentaire ajouté avec succès."
+          description: Commentaire ajouté
 
   /notifications/{user_id}:
     get:
       summary: Récupérer les notifications non lues
-      description: Retourne les notifications non lues d'un utilisateur.
       parameters:
         - name: user_id
           in: path
           required: true
           schema:
             type: integer
-            example: 1
       responses:
         "200":
           description: Notifications récupérées
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    id:
-                      type: integer
-                      example: 101
-                    message:
-                      type: string
-                      example: "Vous avez une nouvelle notification."
 
   /notifications/{notification_id}/read:
     put:
       summary: Marquer une notification comme lue
-      description: Permet de marquer une notification comme lue.
       parameters:
         - name: notification_id
           in: path
           required: true
           schema:
             type: integer
-            example: 101
       responses:
         "200":
           description: Notification marquée comme lue
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: "Notification marquée comme lue."
