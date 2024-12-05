@@ -38,3 +38,7 @@ DB_PASSWORD=your-database-password
 
 Ne partagez jamais le fichier .env dans un dépôt public ou avec des utilisateurs non autorisés.
 Les valeurs indiquées ci-dessus doivent être remplacées par vos informations réelles.
+
+lancer L'api avec le lien suivant et tester les requetes via swagger directement 
+
+https://nfi-mondial-net-guhdd8fhcxgxh7gz.northeurope-01.azurewebsites.net/

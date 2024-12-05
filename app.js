@@ -135,12 +135,13 @@
   // dernier 
 
 
-  const express = require("express");
+const express = require("express");
 const bodyParser = require("body-parser");
 require("dotenv").config();
 const sequelize = require("./models/db");
 const swaggerUi = require("swagger-ui-express");
 const yaml = require("yamljs");
+const cors = require("cors");
 
 // Import des routes
 const utilisateurRoutes = require("./routes/utilisateurRoutes");
@@ -160,6 +161,7 @@ const PORT = process.env.PORT || 8080;
 
 // Middleware
 app.use(bodyParser.json());
+app.use(cors()); // Activer CORS
 
 // Swagger Documentation
 app.use("/", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
