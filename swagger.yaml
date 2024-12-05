@@ -1,32 +1,37 @@
 openapi: 3.0.0
 info:
-  title: Azure Blob Storage API
-  description: API pour gérer les fichiers sur Azure Blob Storage.
+  title: API Documentation
+  description: Documentation de l'API pour gérer les utilisateurs, contenus, médias, commentaires et notifications.
   version: "1.0.0"
 
 servers:
-  - url: http://localhost:3000
-    description: Serveur local
+  - url: https://nfi-mondial-net-guhdd8fhcxgxh7gz.northeurope-01.azurewebsites.net
+    description: Serveur principal
 
 paths:
-  /upload:
+  /utilisateurs:
     post:
-      summary: Télécharger un fichier sur Azure Blob Storage
-      description: Permet de télécharger un fichier vers un conteneur Azure Blob Storage.
+      summary: Créer un utilisateur
+      description: Permet de créer un nouvel utilisateur.
       requestBody:
         required: true
         content:
-          multipart/form-data:
+          application/json:
             schema:
               type: object
               properties:
-                file:
+                nom:
                   type: string
-                  format: binary
-                  description: Le fichier à télécharger.
+                  example: John
+                email:
+                  type: string
+                  example: john@example.com
+                motDePasse:
+                  type: string
+                  example: "password123"
       responses:
-        "200":
-          description: Fichier téléchargé avec succès
+        "201":
+          description: Utilisateur créé avec succès
           content:
             application/json:
               schema:
@@ -34,43 +39,196 @@ paths:
                 properties:
                   message:
                     type: string
-                    example: "Fichier téléchargé avec succès"
-                  fileUrl:
-                    type: string
-                    example: "https://nifnet.blob.core.windows.net/media/12345-fichier.txt"
+                    example: "Utilisateur créé avec succès."
         "400":
-          description: Erreur de requête
+          description: Erreur de validation des données
+
+    get:
+      summary: Récupérer tous les utilisateurs
+      description: Retourne une liste de tous les utilisateurs.
+      responses:
+        "200":
+          description: Liste des utilisateurs
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      example: 1
+                    nom:
+                      type: string
+                      example: John
+
+  /utilisateurs/{id}:
+    get:
+      summary: Récupérer un utilisateur par ID
+      description: Retourne les détails d'un utilisateur en fonction de son ID.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            example: 1
+      responses:
+        "200":
+          description: Utilisateur trouvé
           content:
             application/json:
               schema:
                 type: object
                 properties:
-                  error:
+                  id:
+                    type: integer
+                    example: 1
+                  nom:
                     type: string
-                    example: "Le fichier est requis."
-        "500":
-          description: Erreur serveur
+                    example: John
+        "404":
+          description: Utilisateur non trouvé
+
+  /utilisateurs/login:
+    post:
+      summary: Connexion utilisateur
+      description: Permet à un utilisateur de se connecter.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: john@example.com
+                motDePasse:
+                  type: string
+                  example: "password123"
+      responses:
+        "200":
+          description: Connexion réussie
           content:
             application/json:
               schema:
                 type: object
                 properties:
-                  error:
+                  token:
                     type: string
-                    example: "Erreur lors du téléchargement sur Azure."
+                    example: "eyJhbGciOiJIUzI1NiIsInR..."
 
-components:
-  schemas:
-    UploadFileResponse:
-      type: object
-      properties:
-        message:
-          type: string
-        fileUrl:
-          type: string
+  /contenus/create:
+    post:
+      summary: Créer un contenu avec un média
+      description: Permet de créer un contenu en téléchargeant un fichier média vers Azure Blob Storage.
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                media:
+                  type: string
+                  format: binary
+                  description: Fichier média à télécharger
+                titre:
+                  type: string
+                  example: "Titre du contenu"
+      responses:
+        "201":
+          description: Contenu créé avec succès
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Contenu créé avec succès."
+                  mediaUrl:
+                    type: string
+                    example: "https://nifnet.blob.core.windows.net/media/example.jpg"
 
-    ErrorResponse:
-      type: object
-      properties:
-        error:
-          type: string
+  /commentaires:
+    post:
+      summary: Ajouter un commentaire
+      description: Permet d'ajouter un commentaire à un contenu.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                contenuId:
+                  type: integer
+                  example: 1
+                texte:
+                  type: string
+                  example: "Ceci est un commentaire."
+      responses:
+        "201":
+          description: Commentaire ajouté avec succès
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Commentaire ajouté avec succès."
+
+  /notifications/{user_id}:
+    get:
+      summary: Récupérer les notifications non lues
+      description: Retourne les notifications non lues d'un utilisateur.
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          schema:
+            type: integer
+            example: 1
+      responses:
+        "200":
+          description: Notifications récupérées
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      example: 101
+                    message:
+                      type: string
+                      example: "Vous avez une nouvelle notification."
+
+  /notifications/{notification_id}/read:
+    put:
+      summary: Marquer une notification comme lue
+      description: Permet de marquer une notification comme lue.
+      parameters:
+        - name: notification_id
+          in: path
+          required: true
+          schema:
+            type: integer
+            example: 101
+      responses:
+        "200":
+          description: Notification marquée comme lue
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Notification marquée comme lue."
