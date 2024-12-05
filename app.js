@@ -162,7 +162,7 @@ const PORT = process.env.PORT || 8080;
 app.use(bodyParser.json());
 
 // Swagger Documentation
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use("/", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // Routes
 app.use("/utilisateurs", utilisateurRoutes);

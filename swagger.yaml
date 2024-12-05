@@ -1,15 +1,28 @@
 openapi: 3.0.0
 info:
-  title: API Documentation
-  description: API pour gérer les utilisateurs, contenus, médias, commentaires et notifications.
-  version: "1.0.0"
+  title: API Documentation for NFI Mondial Net
+  version: 1.0.0
+  description: Documentation pour les routes CRUD de votre application.
 
 servers:
+  - url: http://localhost:8080
+    description: Serveur local
   - url: https://nfi-mondial-net-guhdd8fhcxgxh7gz.northeurope-01.azurewebsites.net
-    description: Serveur principal
+    description: Serveur de production
 
 paths:
   /utilisateurs:
+    get:
+      summary: Récupérer tous les utilisateurs
+      responses:
+        '200':
+          description: Liste des utilisateurs
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Utilisateur'
     post:
       summary: Créer un utilisateur
       requestBody:
@@ -17,37 +30,17 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                nom:
-                  type: string
-                email:
-                  type: string
-                motDePasse:
-                  type: string
+              $ref: '#/components/schemas/UtilisateurCreate'
       responses:
-        "201":
-          description: Utilisateur créé
-    get:
-      summary: Récupérer tous les utilisateurs
-      responses:
-        "200":
-          description: Liste des utilisateurs
+        '201':
+          description: Utilisateur créé avec succès
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    id:
-                      type: integer
-                    nom:
-                      type: string
-
-  /contenus/create:
+                $ref: '#/components/schemas/Utilisateur'
+  /contenus:
     post:
-      summary: Créer un contenu avec un média
+      summary: Créer un contenu
       requestBody:
         required: true
         content:
@@ -55,14 +48,25 @@ paths:
             schema:
               type: object
               properties:
+                title:
+                  type: string
+                  description: Titre du contenu
+                  example: Un titre intéressant
+                body:
+                  type: string
+                  description: Texte du contenu
+                  example: Ceci est le corps du contenu.
                 media:
                   type: string
                   format: binary
-                titre:
-                  type: string
+                  description: Fichier média
       responses:
-        "201":
-          description: Contenu créé
+        '201':
+          description: Contenu créé avec succès
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Contenu'
 
   /commentaires:
     post:
@@ -72,19 +76,18 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                contenuId:
-                  type: integer
-                texte:
-                  type: string
+              $ref: '#/components/schemas/CommentaireCreate'
       responses:
-        "201":
-          description: Commentaire ajouté
+        '201':
+          description: Commentaire ajouté avec succès
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Commentaire'
 
   /notifications/{user_id}:
     get:
-      summary: Récupérer les notifications non lues
+      summary: Récupérer les notifications non lues pour un utilisateur
       parameters:
         - name: user_id
           in: path
@@ -92,18 +95,110 @@ paths:
           schema:
             type: integer
       responses:
-        "200":
-          description: Notifications récupérées
+        '200':
+          description: Liste des notifications non lues
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Notification'
 
-  /notifications/{notification_id}/read:
-    put:
-      summary: Marquer une notification comme lue
-      parameters:
-        - name: notification_id
-          in: path
-          required: true
-          schema:
-            type: integer
-      responses:
-        "200":
-          description: Notification marquée comme lue
+components:
+  schemas:
+    Utilisateur:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        username:
+          type: string
+          example: johndoe
+        email:
+          type: string
+          example: johndoe@example.com
+        is_private:
+          type: boolean
+          example: false
+    UtilisateurCreate:
+      type: object
+      required:
+        - username
+        - email
+        - password
+      properties:
+        username:
+          type: string
+          example: johndoe
+        email:
+          type: string
+          example: johndoe@example.com
+        password:
+          type: string
+          example: password123
+        is_private:
+          type: boolean
+          example: false
+
+    Contenu:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        title:
+          type: string
+          example: Un titre intéressant
+        body:
+          type: string
+          example: Ceci est le corps du contenu.
+        is_public:
+          type: boolean
+          example: true
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    Commentaire:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        text:
+          type: string
+          example: C'est un commentaire.
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+    CommentaireCreate:
+      type: object
+      required:
+        - text
+      properties:
+        text:
+          type: string
+          example: C'est un commentaire.
+
+    Notification:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        message:
+          type: string
+          example: Nouvelle notification.
+        is_read:
+          type: boolean
+          example: false
+        created_at:
+          type: string
+          format: date-time
