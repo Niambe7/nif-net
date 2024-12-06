@@ -67,14 +67,29 @@ paths:
                 $ref: '#/components/schemas/Contenu'
 
   /commentaires:
-    post:
-      summary: Ajouter un commentaire
+    summary: Ajouter un commentaire à un contenu
+      description: Permet à un utilisateur d'ajouter un commentaire à un contenu existant et envoie une notification au créateur du contenu.
+      tags:
+        - Commentaires
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CommentaireCreate'
+              type: object
+              properties:
+                user_id:
+                  type: integer
+                  description: ID de l'utilisateur qui ajoute le commentaire.
+                  example: 1
+                contenu_id:
+                  type: integer
+                  description: ID du contenu sur lequel ajouter le commentaire.
+                  example: 10
+                text:
+                  type: string
+                  description: Le texte du commentaire.
+                  example: "C'est un commentaire génial !"
       responses:
         '201':
           description: Commentaire ajouté avec succès
