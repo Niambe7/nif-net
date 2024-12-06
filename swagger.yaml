@@ -36,6 +36,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Utilisateur'
+
   /contenus/create:
     post:
       summary: Créer un contenu
@@ -67,7 +68,8 @@ paths:
                 $ref: '#/components/schemas/Contenu'
 
   /commentaires:
-    summary: Ajouter un commentaire à un contenu
+    post:
+      summary: Ajouter un commentaire à un contenu
       description: Permet à un utilisateur d'ajouter un commentaire à un contenu existant et envoie une notification au créateur du contenu.
       tags:
         - Commentaires
@@ -134,6 +136,7 @@ components:
         is_private:
           type: boolean
           example: false
+
     UtilisateurCreate:
       type: object
       required:
@@ -184,21 +187,13 @@ components:
           example: 1
         text:
           type: string
-          example: C'est un commentaire.
+          example: "C'est un commentaire."
         created_at:
           type: string
           format: date-time
         updated_at:
           type: string
           format: date-time
-    CommentaireCreate:
-      type: object
-      required:
-        - text
-      properties:
-        text:
-          type: string
-          example: C'est un commentaire.
 
     Notification:
       type: object
