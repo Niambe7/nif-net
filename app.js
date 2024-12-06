@@ -165,7 +165,7 @@ app.use(cors()); // Activer CORS
 app.use(express.json());
 
 // Swagger Documentation
-app.use("/", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // Routes
 app.use("/utilisateurs", utilisateurRoutes);

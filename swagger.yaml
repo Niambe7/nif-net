@@ -5,7 +5,7 @@ info:
   description: Documentation pour les routes CRUD de votre application.
 
 servers:
-  - url: https://nfi-mondial-net-guhdd8fhcxgxh7gz.northeurope-01.azurewebsites.net
+  - url: https://nfi-mondial-net-guhdd8fhcxgxh7gz.northeurope-01.azurewebsites.net/
     description: Serveur de production
 
 paths:
