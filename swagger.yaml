@@ -37,6 +37,65 @@ paths:
               schema:
                 $ref: '#/components/schemas/Utilisateur'
 
+  /utilisateurs/login:
+    post:
+      summary: Connexion utilisateur
+      description: Authentifie un utilisateur en utilisant son email et son mot de passe.
+      tags:
+        - Utilisateurs
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  description: L'email de l'utilisateur.
+                  example: johndoe@example.com
+                password:
+                  type: string
+                  description: Le mot de passe de l'utilisateur.
+                  example: password123
+      responses:
+        '200':
+          description: Connexion réussie
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Connexion réussie.
+                  token:
+                    type: string
+                    description: Token JWT généré pour l'utilisateur.
+                    example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+                  utilisateur:
+                    $ref: '#/components/schemas/Utilisateur'
+        '401':
+          description: Échec de la connexion
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Email ou mot de passe incorrect.
+        '500':
+          description: Erreur serveur
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Une erreur interne est survenue.
+
   /contenus/create:
     post:
       summary: Créer un contenu
