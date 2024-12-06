@@ -162,6 +162,7 @@ const PORT = process.env.PORT || 8080;
 // Middleware
 app.use(bodyParser.json());
 app.use(cors()); // Activer CORS
+app.use(express.json());
 
 // Swagger Documentation
 app.use("/", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
